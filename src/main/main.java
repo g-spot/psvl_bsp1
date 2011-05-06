@@ -3,7 +3,10 @@ package main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Stack;
+
+import parser.InputParser;
 
 public class main
 {
@@ -15,23 +18,38 @@ public class main
 	{
 		// TODO Auto-generated method stub
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		Stack<Integer> stack = new Stack<Integer>();
-		stack.push(5);
-		stack.push(7);
-		stack.push(9);
-		stack.push(11);
-		stack.pop(); // fuck the world i hate my self and want to die and drive to hell and never ever come back again because it's nice and warm down there und i'll never have to freeze of my ass again
-		System.out.println(stack.toString());
-		String fuck = null;
-		/*try
+		Stack<String> stack = new Stack<String>();
+		InputParser ip = new InputParser();
+		ArrayList<String> splittedString;
+		
+		String next_action = "0";
+		String inputString = "";
+		
+		while(next_action != "q")
 		{
-			fuck = in.readLine();
-		} catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		System.out.println("ist mir egal ftw - uga aga: " + fuck);
+			generate_Prompt(stack);
+			
+			try 
+			{
+				inputString = in.readLine();
+			} catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			splittedString = ip.parse(inputString);
+			
+			generate_Prompt(stack);
+			
+		}
+		
 	}
 
+	private static void generate_Prompt(Stack<String> stack)
+	{
+		
+		System.out.println("\n " + stack.toString() + " #");
+	}
 }
+
+
