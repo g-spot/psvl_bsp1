@@ -6,10 +6,11 @@ public class Neg implements IOperator
 {
 
 	@Override
-	public String doAction(Calc_Stack stack) 
+	public void doAction(Calc_Stack stack) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+        long arg = stack.PopLong();
+
+        stack.Push(arg*(-1));
 	}
 
 }

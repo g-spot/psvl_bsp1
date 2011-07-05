@@ -6,10 +6,12 @@ public class Multi implements IOperator
 {
 
 	@Override
-	public String doAction(Calc_Stack stack) 
+	public void doAction(Calc_Stack stack) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+        long arg1 = stack.PopLong();
+        long arg2 = stack.PopLong();
+        
+        stack.Push(arg2 * arg1);
 	}
 
 }

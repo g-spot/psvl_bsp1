@@ -21,6 +21,8 @@ import operators.Plus;
 public class Parser 
 {
 	Calc_Stack stack;
+	
+	//HashMap die alle gültigen Operatoren beinhaltet mit den jeweiligen Klassen die die Funktionalität beinhalten
 	HashMap<String,IOperator> operators = new HashMap<String,IOperator>();
 	
 	public Parser(Calc_Stack stack)
@@ -43,18 +45,25 @@ public class Parser
 		operators.put("a", new Do());
 	}
 
+	/*
+	 * Verarbeitet Nummern
+	 */
 	public void handleNumber(String c)
 	{
-		if(stack.lastWasNumber)
+		if(stack.lastWasNumber) //Falls die letzte Eingabe eine Ziffer war
 		{
 			long upper,lower, number;
 			try
 			{
+				//Füge die letzte und die neue zu einer Zahl zusammen
 				upper = stack.PopLong();
 				lower = Long.parseLong(c);
 				
+				//Berechne die neue Zahl
 				upper = upper *10;
 				number = upper + lower;
+				
+				//Gib die neue Zahl auf den Stack
 				stack.Push(number);
 				
 			} catch (Exception e)
@@ -62,33 +71,78 @@ public class Parser
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		else
 		{
 			stack.Push(c); //Zahl wird auf den Stack gepushed
 		}
-		stack.lastWasNumber = true;
+		stack.lastWasNumber = true; //Das letzte Element war eine Zahl
 	}
 
+	/* 
+	 * Leerzeichen ignorieren
+	 * */
 	public void handleDelimiter(String c) 
 	{
 		// do nothing?
 		stack.lastWasNumber = false;
 	}
 
+	/*
+	 * Führt für einen Operator die entsprechende Aktion aus
+	 */
 	public void handleOperator(String c) throws Exception 
 	{
-		if(!operators.containsKey(c))
+		if(!operators.containsKey(c)) //Prüfung ob der Operator gültig ist
 		{
-			throw new Exception("Unkown operator");
+			if(!c.startsWith(" ")) //Prüfung ob es ein Leerzeichen ist, wenn nicht => Error
+				throw new Exception("Unkown operator");
+			else
+				stack.lastWasNumber = false;
 		}
 		else
 		{
+			//Holt für den Operator die entsprechende Klasse
 			IOperator op;
-			op = operators.get("c");
-			op.doAction(stack);
+			op = operators.get(c);
+			op.doAction(stack); //Führt die Aktion auf den Stack aus
 		}
 		stack.lastWasNumber = false;
+	}
+
+	/*
+	 * Kümmert sich um die Behandlung von Klammern in Klammern
+	 */
+	public String handleBrace(String input)
+	{	
+		int braceCount = 0; //Zählt die offenen Klammern
+		int endIndex = 0; //enthält nach der Schleiche den Index der schließenden Klammer
+		
+		for(int i = 0; i < input.length(); i++ )
+		{
+			if(input.charAt(i) == '[')
+				braceCount = braceCount + 1;
+			if(input.charAt(i) == ']')
+				braceCount = braceCount - 1;
+			
+			if(braceCount == 0)
+			{
+				endIndex = i;
+				break;
+			}
+		}
+		
+		//Gibt die Expression auf den Stack
+		stack.Push(input.subSequence(0, endIndex+1 ).toString() );
+		
+		if(main.DEGUB)
+		{
+			System.out.println("DEBUG: braces pushed: " + input.subSequence(0, endIndex+1 ).toString());
+			System.out.println("DEBUG: input returned: " + input.substring(endIndex).toString());
+		}
+		stack.lastWasNumber = false;
+		
+		//Gibt die Eingabefolge ohne die Expression zurück
+		return input.substring(endIndex+1).toString() ;
 	}
 }

@@ -5,10 +5,10 @@ import main.Calc_Stack;
 public class Do implements IOperator {
 
 	@Override
-	public String doAction(Calc_Stack stack) 
+	public void doAction(Calc_Stack stack) throws Exception 
 	{
-		// TODO Auto-generated method stub
-		return null;
+		stack.Push(stack.PopExpression());
+		stack.lastIsCommand = true;
 	}
 
 }

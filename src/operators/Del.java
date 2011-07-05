@@ -2,13 +2,17 @@ package operators;
 
 import main.Calc_Stack;
 
-public class Del implements IOperator {
+public class Del implements IOperator 
+{
 
 	@Override
-	public String doAction(Calc_Stack stack) 
+	public void doAction(Calc_Stack stack) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		long n = stack.PopLong();
+		if(n < 0)
+			throw new Exception("cannot delete element from index lower than zero");
+		
+		stack.deleteElementAt(n);
 	}
 
 }

@@ -5,10 +5,13 @@ import main.Calc_Stack;
 public class Copy implements IOperator {
 
 	@Override
-	public String doAction(Calc_Stack stack) 
-	{
-		// TODO Auto-generated method stub
-		return null;
+	public void doAction(Calc_Stack stack) throws Exception  
+	{	
+		long n = stack.PopLong();
+		if(n < 0)
+			throw new Exception("cannot copy element from index lower than zero");
+		
+		stack.Push(stack.getElementAt(n));
 	}
 
 }
